@@ -3,7 +3,7 @@ name: Release Changed Charts
 on:
   push:
     branches:
-      - marc-barry/qtap-chart
+      - main
 
 jobs:
   release-charts:
