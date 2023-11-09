@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+for chart in charts/*; do
+    helm package "$chart" -d $chart/.packaged-charts
+    CHART_NAME=$(grep 'name:' $chart/Chart.yaml | cut -d ' ' -f 2)
+    CHART_VERSION=$(grep 'version:' $chart/Chart.yaml | cut -d ' ' -f 2)
+    echo "Generating index for $chart with name $CHART_NAME and version $CHART_VERSION"
+    helm repo index "$chart"/.packaged-charts --url https://github.com/qpoint-io/helm-charts/releases/download/"$CHART_NAME"-"$CHART_VERSION" --merge index.yaml
+    cp $chart/.packaged-charts/index.yaml index.yaml
+done

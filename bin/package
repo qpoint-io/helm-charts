@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eu
+
+for chart in charts/*; do
+    helm package "$chart" -d $chart/.packaged-charts
+done

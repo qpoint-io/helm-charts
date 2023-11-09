@@ -1,0 +1,40 @@
+name: Release Changed Charts
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-charts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3.5
+
+      - name: Identify Changed Charts
+        id: changed_charts
+        run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          LAST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          CHANGED_CHARTS=$(git diff --name-only $LAST_TAG..HEAD charts/ | awk -F/ '{print $2}' | uniq)
+          echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
+
+      - name: Package and Release Each Changed Chart
+        if: env.CHANGED_CHARTS != ''
+        run: |
+          for chart in $CHANGED_CHARTS; do
+            CHART_PATH="charts/$chart"
+            if [ -d "$CHART_PATH" ]; then
+              echo "Packaging and releasing $chart..."
+              helm package $CHART_PATH
+              CHART_VERSION=$(grep 'version:' $CHART_PATH/Chart.yaml | cut -d ' ' -f 2)
+              RELEASE_NAME="$chart-$CHART_VERSION"
+              gh release create $RELEASE_NAME *.tgz --title "$RELEASE_NAME" --notes "New release of $chart"
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
