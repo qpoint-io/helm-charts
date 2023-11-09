@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -eu
+
+helm repo index .packaged-charts --url https://github.com/qpoint-io/helm-charts/releases/download --merge index.yaml

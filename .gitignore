@@ -1,0 +1,4 @@
+### Helm ###
+# Chart dependencies
+.cr-release-packages/
+.packaged-charts/*.tgz
