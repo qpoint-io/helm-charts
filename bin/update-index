@@ -9,4 +9,5 @@ for chart in charts/*; do
     echo "Generating index for $chart with name $CHART_NAME and version $CHART_VERSION"
     helm repo index "$chart"/.packaged-charts --url https://github.com/qpoint-io/helm-charts/releases/download/"$CHART_NAME"-"$CHART_VERSION" --merge index.yaml
     cp $chart/.packaged-charts/index.yaml index.yaml
+    rm -r $chart/.packaged-charts
 done
