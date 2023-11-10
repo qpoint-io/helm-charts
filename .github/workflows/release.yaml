@@ -18,9 +18,10 @@ jobs:
       - name: Identify Changed Charts
         id: changed_charts
         run: |
-          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          LAST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          CHANGED_CHARTS=$(git diff --name-only $LAST_TAG..HEAD charts/ | awk -F/ '{print $2}' | uniq)
+          git fetch --depth=2 origin master
+          LAST_COMMIT=$(git rev-parse origin/master)
+          PREVIOUS_COMMIT=$(git rev-parse origin/master^)
+          CHANGED_CHARTS=$(git diff --name-only $PREVIOUS_COMMIT $LAST_COMMIT charts/ | awk -F/ '{print $2}' | uniq)
           echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
 
       - name: Package and Release Each Changed Chart
