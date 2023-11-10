@@ -14,14 +14,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-args:
-  [
-    "gateway",
-    "--listen=0.0.0.0:10000",
-    "--status-listen=0.0.0.0:8080",
-    "--envoy-log-level=error",
-    "--no-hot-restart",
-  ]
+args: ["gateway", "--envoy-log-level=error"]
 
 endpoint: "https://api.qpoint.io"
 
@@ -54,7 +47,9 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 10000
+  tcpPort: 10000
+  httpPort: 10080
+  httpsPort: 10443
 
 status:
   type: ClusterIP

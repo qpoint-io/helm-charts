@@ -6,8 +6,16 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: service
+    - port: {{ .Values.service.tcpPort }}
+      targetPort: tcpService
       protocol: TCP
-      name: service
+      name: tcpService
+    - port: {{ .Values.service.httpPort }}
+      targetPort: httpService
+      protocol: TCP
+      name: httpService
+    - port: {{ .Values.service.httpsPort }}
+      targetPort: httpsService
+      protocol: TCP
+      name: httpsService
   selector: {{- include "qtap.selectorLabels" . | nindent 4 }}
