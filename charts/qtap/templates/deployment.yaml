@@ -47,14 +47,8 @@ spec:
                   name: token
                   key: token
           ports:
-            - name: tcpService
-              containerPort: {{ .Values.service.tcpPort }}
-              protocol: TCP
-            - name: httpService
-              containerPort: {{ .Values.service.httpPort }}
-              protocol: TCP
-            - name: httpsService
-              containerPort: {{ .Values.service.httpsPort }}
+            - name: service
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
             - name: status
               containerPort: {{ .Values.status.port }}
