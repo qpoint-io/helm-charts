@@ -7,15 +7,15 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.tcpPort }}
-      targetPort: tcpService
+      targetPort: tcp-service
       protocol: TCP
-      name: tcpService
+      name: tcp-service
     - port: {{ .Values.service.httpPort }}
-      targetPort: httpService
+      targetPort: http-service
       protocol: TCP
-      name: httpService
+      name: http-service
     - port: {{ .Values.service.httpsPort }}
-      targetPort: httpsService
+      targetPort: https-service
       protocol: TCP
-      name: httpsService
+      name: https-service
   selector: {{- include "qtap.selectorLabels" . | nindent 4 }}
