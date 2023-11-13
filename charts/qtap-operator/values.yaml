@@ -32,7 +32,6 @@ controllerManager:
         - ALL
     image:
       repository: us-docker.pkg.dev/qpoint-edge/public/kubernetes-qtap-operator
-      tag: latest
     imagePullPolicy: IfNotPresent
     resources:
       limits:
