@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "kubernetes-qtap-operator.fullname" . }}-manager-role
+  name: {{ include "qtap-operator.fullname" . }}-manager-role
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: qtap-operator
     app.kubernetes.io/part-of: qtap-operator
-  {{- include "kubernetes-qtap-operator.labels" . | nindent 4 }}
+  {{- include "qtap-operator.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""
@@ -37,17 +37,17 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "kubernetes-qtap-operator.fullname" . }}-manager-rolebinding
+  name: {{ include "qtap-operator.fullname" . }}-manager-rolebinding
   labels:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/created-by: qtap-operator
     app.kubernetes.io/part-of: qtap-operator
-  {{- include "kubernetes-qtap-operator.labels" . | nindent 4 }}
+  {{- include "qtap-operator.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: '{{ include "kubernetes-qtap-operator.fullname" . }}-manager-role'
+  name: '{{ include "qtap-operator.fullname" . }}-manager-role'
 subjects:
 - kind: ServiceAccount
-  name: '{{ include "kubernetes-qtap-operator.fullname" . }}-controller-manager'
+  name: '{{ include "qtap-operator.fullname" . }}-controller-manager'
   namespace: '{{ .Release.Namespace }}'

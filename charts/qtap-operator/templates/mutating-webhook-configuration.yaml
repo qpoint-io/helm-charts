@@ -1,17 +1,17 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: {{ include "kubernetes-qtap-operator.fullname" . }}-mutating-webhook-configuration
+  name: {{ include "qtap-operator.fullname" . }}-mutating-webhook-configuration
   annotations:
-    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "kubernetes-qtap-operator.fullname" . }}-serving-cert
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "qtap-operator.fullname" . }}-serving-cert
   labels:
-  {{- include "kubernetes-qtap-operator.labels" . | nindent 4 }}
+  {{- include "qtap-operator.labels" . | nindent 4 }}
 webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
     service:
-      name: '{{ include "kubernetes-qtap-operator.fullname" . }}-webhook-service'
+      name: '{{ include "qtap-operator.fullname" . }}-webhook-service'
       namespace: '{{ .Release.Namespace }}'
       path: /mutate-v1-pod
   failurePolicy: Fail
