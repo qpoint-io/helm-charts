@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "qtap-operator.fullname" . }}-serving-cert
+  labels:
+  {{- include "qtap-operator.labels" . | nindent 4 }}
+spec:
+  dnsNames:
+  - '{{ include "qtap-operator.fullname" . }}-webhook-service.{{ .Release.Namespace
+    }}.svc'
+  - '{{ include "qtap-operator.fullname" . }}-webhook-service.{{ .Release.Namespace
+    }}.svc.{{ .Values.kubernetesClusterDomain }}'
+  issuerRef:
+    kind: Issuer
+    name: '{{ include "qtap-operator.fullname" . }}-selfsigned-issuer'
+  secretName: webhook-server-cert

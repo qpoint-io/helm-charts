@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "qtap-operator.fullname" . }}-selfsigned-issuer
+  labels:
+  {{- include "qtap-operator.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}
