@@ -46,7 +46,7 @@ controllerManager:
 defaultPodAnnotationsConfigmap:
   annotationsYaml: |-
     qpoint.io/inject-ca: "true"
-    qpoint.io/egress-init-tag: "0.0.5"
+    qpoint.io/egress-init-tag: "v0.0.6"
     qpoint.io/egress-to-domain: "qtap-gateway.qpoint.svc.cluster.local"
 kubernetesClusterDomain: cluster.local
 metricsService:
