@@ -14,7 +14,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-args: ["gateway", "--envoy-log-level=error", "--log-level=info"]
+args: ["gateway", "--envoy-log-level=error"]
 
 endpoint: "https://api.qpoint.io"
 
