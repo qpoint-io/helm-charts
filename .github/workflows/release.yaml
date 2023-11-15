@@ -22,14 +22,15 @@ jobs:
           LAST_COMMIT=$(git rev-parse origin/main)
           PREVIOUS_COMMIT=$(git rev-parse origin/main^)
           CHANGED_CHARTS=$(git diff --name-only $PREVIOUS_COMMIT $LAST_COMMIT charts/ | awk -F/ '{print $2}' | uniq)
-          echo "CHANGED_CHARTS=\"$CHANGED_CHARTS\""
-          echo "CHANGED_CHARTS=\"$CHANGED_CHARTS\"" >> $GITHUB_ENV
+          echo "CHANGED_CHARTS=$CHANGED_CHARTS"
+          echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
 
       - name: Package and Release Each Changed Chart
         if: env.CHANGED_CHARTS != ''
         run: |
           for chart in $CHANGED_CHARTS; do
             CHART_PATH="charts/$chart"
+            echo $CHART_PATH
             if [ -d "$CHART_PATH" ]; then
               echo "Packaging and releasing $chart..."
               helm package $CHART_PATH
