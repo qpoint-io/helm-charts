@@ -21,8 +21,7 @@ jobs:
           git fetch --depth=2 origin main
           LAST_COMMIT=$(git rev-parse origin/main)
           PREVIOUS_COMMIT=$(git rev-parse origin/main^)
-          CHANGED_CHARTS=$(git diff --name-only $PREVIOUS_COMMIT $LAST_COMMIT charts/ | awk -F/ '{print $2}' | uniq)
-          echo "CHANGED_CHARTS=$CHANGED_CHARTS"
+          CHANGED_CHARTS=$(git diff --name-only $PREVIOUS_COMMIT $LAST_COMMIT charts/ | awk -F/ '{print $2}' | uniq | tr '\n' ' ')
           echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
 
       - name: Package and Release Each Changed Chart
