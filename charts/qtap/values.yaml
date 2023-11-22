@@ -93,3 +93,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# API token
+token: ""
