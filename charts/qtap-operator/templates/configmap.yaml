@@ -1,0 +1,11 @@
+{{- if .Values.caConfigMap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qpoint-qtap-ca.crt
+  labels:
+  {{- include "qtap-operator.labels" . | nindent 4 }}
+data:
+  ca.crt: |
+    {{ .Values.caConfigMap | nindent 8 }}
+{{- end }}
