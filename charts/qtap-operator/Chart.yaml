@@ -2,6 +2,6 @@ apiVersion: v2
 name: qtap-operator
 description: A Helm chart for a Kubernetes Qtap operator
 type: application
-version: 0.0.7
+version: 0.0.8
 # This is the semantic version of https://github.com/qpoint-io/kubernetes-qtap-operator/releases being deployed
-appVersion: "v0.0.4"
+appVersion: "v0.0.5"
