@@ -1,5 +1,5 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   name: {{ include "qtap-operator.fullname" . }}-manager-role
   labels:
@@ -11,31 +11,23 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
   - configmaps
   verbs:
   - get
   - list
   - watch
   - create
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   name: {{ include "qtap-operator.fullname" . }}-manager-rolebinding
   labels:
@@ -45,7 +37,7 @@ metadata:
   {{- include "qtap-operator.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: '{{ include "qtap-operator.fullname" . }}-manager-role'
 subjects:
 - kind: ServiceAccount
