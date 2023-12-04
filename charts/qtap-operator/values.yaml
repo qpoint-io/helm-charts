@@ -34,6 +34,7 @@ controllerManager:
       endpoint: https://api.qpoint.io
     image:
       repository: us-docker.pkg.dev/qpoint-edge/public/kubernetes-qtap-operator
+      tag: latest
     imagePullPolicy: IfNotPresent
     resources:
       limits:
@@ -51,9 +52,13 @@ injectPodAnnotationsConfigmap:
     qpoint.io/egress-init-tag: "v0.0.7"
     qpoint.io/qtap-tag: "v0.0.10"
     qpoint.io/egress-port-mapping: "10080:80,10443:443,10000:"
+    qpoint.io/egress-accept-uids: "1010"
+    qpoint.io/egress-accept-gids: "1010"
     qpoint.io/log-level: "info"
     qpoint.io/block-unknown: "false"
     qpoint.io/dns-lookup-family: "V4_ONLY"
+    qpoint.io/qtap-uid: "1010"
+    qpoint.io/qtap-gid: "1010"
 kubernetesClusterDomain: cluster.local
 metricsService:
   ports:
@@ -74,7 +79,6 @@ webhookService:
     protocol: TCP
     targetPort: 9443
   type: ClusterIP
-
 
 # API token
 token: ""
