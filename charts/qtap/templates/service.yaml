@@ -6,16 +6,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.tcpPort }}
-      targetPort: tcp-service
+    - port: {{ .Values.service.egressHttpPort }}
+      targetPort: egress-http-service
       protocol: TCP
-      name: tcp-service
-    - port: {{ .Values.service.httpPort }}
-      targetPort: http-service
+      name: egress-http-service
+    - port: {{ .Values.service.egressHttpsPort }}
+      targetPort: egress-https-service
       protocol: TCP
-      name: http-service
-    - port: {{ .Values.service.httpsPort }}
-      targetPort: https-service
-      protocol: TCP
-      name: https-service
+      name: egress-https-service
   selector: {{- include "qtap.selectorLabels" . | nindent 4 }}
