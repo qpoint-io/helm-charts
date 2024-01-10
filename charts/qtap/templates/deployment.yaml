@@ -46,15 +46,18 @@ spec:
                 secretKeyRef:
                   name: token
                   key: token
+            - name: EGRESS_HTTP_LISTEN
+              value: "0.0.0.0:{{ .Values.service.egressHttpPort }}"
+            - name: EGRESS_HTTPS_LISTEN
+              value: "0.0.0.0:{{ .Values.service.egressHttpsPort }}"
+            - name: STATUS_LISTEN
+              value: "0.0.0.0:{{ .Values.status.port }}"
           ports:
-            - name: tcp-service
-              containerPort: {{ .Values.service.tcpPort }}
+            - name: egress-http-service
+              containerPort: {{ .Values.service.egressHttpPort }}
               protocol: TCP
-            - name: http-service
-              containerPort: {{ .Values.service.httpPort }}
-              protocol: TCP
-            - name: https-service
-              containerPort: {{ .Values.service.httpsPort }}
+            - name: egress-https-service
+              containerPort: {{ .Values.service.egressHttpsPort }}
               protocol: TCP
             - name: status
               containerPort: {{ .Values.status.port }}

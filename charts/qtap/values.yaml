@@ -47,13 +47,12 @@ securityContext:
 
 service:
   type: ClusterIP
-  tcpPort: 10000
-  httpPort: 10080
-  httpsPort: 10443
+  egressHttpPort: 10080
+  egressHttpsPort: 10443
 
 status:
   type: ClusterIP
-  port: 8080
+  port: 10001
 
 resources:
   {}
