@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   qtap:
   - apiVersion: v2
+    appVersion: v0.0.12
+    created: "2024-01-23T13:53:26.221438-05:00"
+    description: A Helm chart for running Qtap on Kubernetes
+    digest: b429a0d98209db364d60df0fbac880a8c15ecb2c5705dcadc2b003250be08d7c
+    icon: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNDMuNjMgMzIuOSI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSwgLmNscy0yIHsKICAgICAgICBzdHJva2Utd2lkdGg6IDBweDsKICAgICAgfQoKICAgICAgLmNscy0zIHsKICAgICAgICBmaWxsOiBub25lOwogICAgICAgIHN0cm9rZTogIzEwMTQxNzsKICAgICAgICBzdHJva2UtbGluZWNhcDogcm91bmQ7CiAgICAgICAgc3Ryb2tlLW1pdGVybGltaXQ6IDEwOwogICAgICAgIHN0cm9rZS13aWR0aDogMi41NXB4OwogICAgICB9CgogICAgICAuY2xzLTIgewogICAgICAgIGZpbGw6ICMxMDE0MTc7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxnIGlkPSJMYXllcl8yLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+CiAgICA8ZyBpZD0ibG9nby1ibGFjayI+CiAgICAgIDxnPgogICAgICAgIDxsaW5lIGNsYXNzPSJjbHMtMyIgeDE9IjI4LjE3IiB5MT0iMjguMzQiIHgyPSIzMC44NyIgeTI9IjMxLjA0Ii8+CiAgICAgICAgPHBhdGggY2xhc3M9ImNscy0yIiBkPSJtMTUuMDEsMEM2LjcyLDAsMCw2LjcyLDAsMTUuMDFzNi43MiwxNS4wMSwxNS4wMSwxNS4wMSwxNS4wMS02LjcyLDE1LjAxLTE1LjAxUzIzLjMsMCwxNS4wMSwwWm04LjMzLDIzLjUxYy0uMjUuMjUtLjU4LjM3LS45LjM3cy0uNjUtLjEyLS45LS4zN2wtMy43Mi0zLjcyYy0uNS0uNS0uNS0xLjMxLDAtMS44MS41LS41LDEuMzEtLjUsMS44MSwwbDMuNzIsMy43MmMuNS41LjUsMS4zMSwwLDEuODFaIi8+CiAgICAgIDwvZz4KICAgICAgPGc+CiAgICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJtNTUuNDQsMjQuOTNWNi44aDcuNDljMS4zNiwwLDIuNTMuMjYsMy41Mi43OS45OS41MywxLjc1LDEuMjYsMi4yOSwyLjIuNTQuOTQuODEsMi4wNC44MSwzLjI4cy0uMjcsMi4zNC0uODIsMy4yOGMtLjU0Ljk0LTEuMzIsMS42Ni0yLjMzLDIuMTctMS4wMS41MS0yLjIxLjc3LTMuNTkuNzdoLTQuNjJ2LTMuNDVoMy44MWMuNjYsMCwxLjIxLS4xMiwxLjY2LS4zNS40NS0uMjMuNzgtLjU1LDEuMDEtLjk3LjIzLS40Mi4zNC0uOS4zNC0xLjQ2cy0uMTItMS4wNS0uMzQtMS40NmMtLjIzLS40MS0uNTctLjczLTEuMDItLjk1LS40NS0uMjItMS0uMzQtMS42Ni0uMzRoLTIuMTZ2MTQuNmgtNC4zOFoiLz4KICAgICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Im05MC4zLDE1Ljg3YzAsMS45OS0uMzgsMy42OS0xLjE1LDUuMDdzLTEuOCwyLjQ0LTMuMTEsMy4xNmMtMS4zMS43Mi0yLjc3LDEuMDgtNC4zOSwxLjA4cy0zLjEtLjM2LTQuNC0xLjA5Yy0xLjMtLjczLTIuMzQtMS43OC0zLjEtMy4xNy0uNzctMS4zOC0xLjE1LTMuMDctMS4xNS01LjA2cy4zOC0zLjY5LDEuMTUtNS4wN2MuNzYtMS4zOSwxLjgtMi40NCwzLjEtMy4xNiwxLjMtLjcyLDIuNzctMS4wOCw0LjQtMS4wOHMzLjA5LjM2LDQuMzksMS4wOGMxLjMxLjcyLDIuMzQsMS43NywzLjExLDMuMTZzMS4xNSwzLjA4LDEuMTUsNS4wN1ptLTQuNDgsMGMwLTEuMTgtLjE3LTIuMTgtLjUtMi45OS0uMzMtLjgxLS44MS0xLjQzLTEuNDMtMS44NXMtMS4zNy0uNjMtMi4yNC0uNjMtMS42Mi4yMS0yLjI0LjYzLTEuMTEsMS4wNC0xLjQ0LDEuODUtLjUsMS44MS0uNSwyLjk5LjE3LDIuMTguNSwyLjk5LjgxLDEuNDMsMS40NCwxLjg1LDEuMzcuNjMsMi4yNC42MywxLjYyLS4yMSwyLjI0LS42MywxLjEtMS4wNCwxLjQzLTEuODVjLjMzLS44MS41LTEuODEuNS0yLjk5WiIvPgogICAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0ibTk5LjIzLDYuOHYxOC4xM2gtNC4zOFY2LjhoNC4zOFoiLz4KICAgICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Im0xMjEuMzksNi44djE4LjEzaC0zLjcybC03LjIxLTEwLjQ2aC0uMTJ2MTAuNDZoLTQuMzhWNi44aDMuNzdsNy4xMywxMC40NWguMTVWNi44aDQuMzdaIi8+CiAgICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJtMTI1LjUzLDEwLjM2di0zLjU2aDE1LjMydjMuNTZoLTUuNXYxNC41N2gtNC4zMnYtMTQuNTdoLTUuNTFaIi8+CiAgICAgIDwvZz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==
+    name: qtap
+    type: application
+    urls:
+    - https://github.com/qpoint-io/helm-charts/releases/download/qtap-0.0.13/qtap-0.0.13.tgz
+    version: 0.0.13
+  - apiVersion: v2
     appVersion: v0.0.11
     created: "2024-01-18T09:47:10.910985-05:00"
     description: A Helm chart for running Qtap on Kubernetes
@@ -134,6 +145,16 @@ entries:
     - https://github.com/qpoint-io/helm-charts/releases/download/qtap-0.0.1/qtap-0.0.1.tgz
     version: 0.0.1
   qtap-operator:
+  - apiVersion: v2
+    appVersion: v0.0.9
+    created: "2024-01-23T13:53:26.297187-05:00"
+    description: A Helm chart for a Kubernetes Qtap operator
+    digest: b36ecd74c7d66c63a739b27df9a4143fef09c32cc7cc10d08064826807f9015d
+    name: qtap-operator
+    type: application
+    urls:
+    - https://github.com/qpoint-io/helm-charts/releases/download/qtap-operator-0.0.15/qtap-operator-0.0.15.tgz
+    version: 0.0.15
   - apiVersion: v2
     appVersion: v0.0.9
     created: "2024-01-18T09:47:10.986234-05:00"
@@ -274,4 +295,4 @@ entries:
     urls:
     - https://github.com/qpoint-io/helm-charts/releases/download/qtap-operator-0.0.1/qtap-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2024-01-18T09:47:10.985841-05:00"
+generated: "2024-01-23T13:53:26.296791-05:00"
