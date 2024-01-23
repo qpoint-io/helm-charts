@@ -7,11 +7,11 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.egressHttpPort }}
-      targetPort: egress-http-service
+      targetPort: e-http-service
       protocol: TCP
-      name: egress-http-service
+      name: e-http-service
     - port: {{ .Values.service.egressHttpsPort }}
-      targetPort: egress-https-service
+      targetPort: e-https-service
       protocol: TCP
-      name: egress-https-service
+      name: e-https-service
   selector: {{- include "qtap.selectorLabels" . | nindent 4 }}

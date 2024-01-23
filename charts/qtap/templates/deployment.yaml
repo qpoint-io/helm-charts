@@ -53,10 +53,10 @@ spec:
             - name: STATUS_LISTEN
               value: "0.0.0.0:{{ .Values.status.port }}"
           ports:
-            - name: egress-http-service
+            - name: e-http-service
               containerPort: {{ .Values.service.egressHttpPort }}
               protocol: TCP
-            - name: egress-https-service
+            - name: e-https-service
               containerPort: {{ .Values.service.egressHttpsPort }}
               protocol: TCP
             - name: status
