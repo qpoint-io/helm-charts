@@ -46,6 +46,10 @@ spec:
                 secretKeyRef:
                   name: token
                   key: token
+            - name: INGRESS_HTTP_LISTEN
+              value: "0.0.0.0:{{ .Values.service.ingressHttpPort }}"
+            - name: INGRESS_HTTPS_LISTEN
+              value: "0.0.0.0:{{ .Values.service.ingressHttpsPort }}"
             - name: EGRESS_HTTP_LISTEN
               value: "0.0.0.0:{{ .Values.service.egressHttpPort }}"
             - name: EGRESS_HTTPS_LISTEN
@@ -53,6 +57,12 @@ spec:
             - name: STATUS_LISTEN
               value: "0.0.0.0:{{ .Values.status.port }}"
           ports:
+            - name: i-http-service
+              containerPort: {{ .Values.service.ingressHttpPort }}
+              protocol: TCP
+            - name: i-https-service
+              containerPort: {{ .Values.service.ingressHttpsPort }}
+              protocol: TCP
             - name: e-http-service
               containerPort: {{ .Values.service.egressHttpPort }}
               protocol: TCP

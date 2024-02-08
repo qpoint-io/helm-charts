@@ -47,6 +47,8 @@ securityContext:
 
 service:
   type: ClusterIP
+  ingressHttpPort: 11080
+  ingressHttpsPort: 11443
   egressHttpPort: 10080
   egressHttpsPort: 10443
 
