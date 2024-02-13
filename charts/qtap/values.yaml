@@ -47,14 +47,28 @@ securityContext:
 
 service:
   type: ClusterIP
-  ingressHttpPort: 11080
-  ingressHttpsPort: 11443
-  egressHttpPort: 10080
-  egressHttpsPort: 10443
+  ingress:
+    http:
+      addr: 0.0.0.0
+      port: 11080
+    https:
+      addr: 0.0.0.0
+      port: 11443
+  egress:
+    http:
+      addr: 0.0.0.0
+      port: 10080
+    https:
+      addr: 0.0.0.0
+      port: 10443
 
 status:
-  type: ClusterIP
+  addr: 0.0.0.0
   port: 10001
+
+collector:
+  addr: 127.0.0.1
+  port: 11000
 
 resources:
   {}
