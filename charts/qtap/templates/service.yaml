@@ -6,19 +6,19 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.ingressHttpPort }}
+    - port: {{ .Values.service.ingress.http.port }}
       targetPort: i-http-service
       protocol: TCP
       name: i-http-service
-    - port: {{ .Values.service.ingressHttpsPort }}
+    - port: {{ .Values.service.ingress.https.port }}
       targetPort: i-https-service
       protocol: TCP
       name: i-https-service
-    - port: {{ .Values.service.egressHttpPort }}
+    - port: {{ .Values.service.egress.http.port }}
       targetPort: e-http-service
       protocol: TCP
       name: e-http-service
-    - port: {{ .Values.service.egressHttpsPort }}
+    - port: {{ .Values.service.egress.https.port }}
       targetPort: e-https-service
       protocol: TCP
       name: e-https-service
