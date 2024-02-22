@@ -49,7 +49,11 @@ injectPodAnnotationsConfigmap:
   annotationsYaml: |-
     qpoint.io/inject-ca: "true"
     qpoint.io/qtap-init-tag: "v0.0.8"
-    qpoint.io/qtap-tag: "v0.0.19"
+    qpoint.io/qtap-init-run-as-user: "0"
+    qpoint.io/qtap-init-run-as-group: "0"
+    qpoint.io/qtap-init-run-as-non-root: "false"
+    qpoint.io/qtap-init-run-as-privileged: "false"
+    qpoint.io/qtap-tag: "v0.0.20"
     qpoint.io/qtap-init-egress-port-mapping: "10080:80,10443:443"
     qpoint.io/qtap-init-egress-accept-uids: "1010"
     qpoint.io/qtap-init-egress-accept-gids: "1010"
