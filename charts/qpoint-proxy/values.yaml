@@ -60,11 +60,11 @@ service:
       containerPort: 10443
       protocol: TCP
       name: e-https-tr
-    - port: 10080
+    - port: 18080
       containerPort: 18080
       protocol: TCP
       name: e-http-mi
-    - port: 10443
+    - port: 18443
       containerPort: 18443
       protocol: TCP
       name: e-https-mi

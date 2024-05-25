@@ -60,6 +60,9 @@ spec:
               containerPort: {{ .containerPort }}
               protocol: {{ .protocol }}
         {{- end }}
+            - name: status
+              containerPort: {{ .Values.status.port }}
+              protocol: TCP
           startupProbe:
             httpGet:
               path: /readyz
