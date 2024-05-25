@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "qtap.fullname" . }}-test-connection"
+  name: "{{ include "qpoint.fullname" . }}-test-connection"
   labels:
-    {{- include "qtap.labels" . | nindent 4 }}
+    {{- include "qpoint.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "qtap.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "qpoint.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

@@ -1,11 +1,11 @@
-# Default values for qtap.
+# Default values for qpoint.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: us-docker.pkg.dev/qpoint-edge/public/qtap
+  repository: us-docker.pkg.dev/qpoint-edge/public/qpoint
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -14,9 +14,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-args: ["gateway", "--envoy-log-level=error", "--log-level=info", "--dns-lookup-family=V4_ONLY"]
+args: ["proxy", "--envoy-log-level=error", "--log-level=info", "--dns-lookup-family=V4_ONLY"]
 
-endpoint: "https://api.qpoint.io"
+registrationEndpoint: "https://api.qpoint.io"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -45,30 +45,37 @@ securityContext:
   # runAsNonRoot: true
   # runAsUser: 1000
 
+defaultTCPListenAddress: "0.0.0.0"
+middlewareTCPForwardPorts: "18080:80,18443:443"
+transparentTCPForwardPorts: "10080:80,10443:443"
+
 service:
   type: ClusterIP
-  ingress:
-    http:
-      addr: 0.0.0.0
-      port: 11080
-    https:
-      addr: 0.0.0.0
-      port: 11443
-  egress:
-    http:
-      addr: 0.0.0.0
-      port: 10080
-    https:
-      addr: 0.0.0.0
-      port: 10443
+  ports:
+    - port: 10080
+      containerPort: 10080
+      protocol: TCP
+      name: e-http-tr
+    - port: 10443
+      containerPort: 10443
+      protocol: TCP
+      name: e-https-tr
+    - port: 10080
+      containerPort: 18080
+      protocol: TCP
+      name: e-http-mi
+    - port: 10443
+      containerPort: 18443
+      protocol: TCP
+      name: e-https-mi
 
 status:
   addr: 0.0.0.0
   port: 10001
 
-collector:
+middlewareEgress:
   addr: 127.0.0.1
-  port: 11000
+  port: 11001
 
 resources:
   {}
@@ -110,4 +117,4 @@ tolerations: []
 affinity: {}
 
 # API token
-token: ""
+registrationToken: ""

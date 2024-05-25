@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "qtap.fullname" . }}
+  name: {{ include "qpoint.fullname" . }}
   labels:
-    {{- include "qtap.labels" . | nindent 4 }}
+    {{- include "qpoint.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "qtap.fullname" . }}
+    name: {{ include "qpoint.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

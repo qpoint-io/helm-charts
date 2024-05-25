@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "qtap.fullname" . }}
+  name: {{ include "qpoint.fullname" . }}
   labels:
-    {{- include "qtap.labels" . | nindent 4 }}
+    {{- include "qpoint.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "qtap.selectorLabels" . | nindent 6 }}
+      {{- include "qpoint.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "qtap.labels" . | nindent 8 }}
+        {{- include "qpoint.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "qtap.serviceAccountName" . }}
+      serviceAccountName: {{ include "qpoint.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -39,41 +39,27 @@ spec:
           args:
             {{- toYaml .Values.args | nindent 12 }}
           env:
-            - name: ENDPOINT
-              value: "{{ .Values.endpoint }}"
-            - name: TOKEN
+            - name: REGISTRATION_ENDPOINT
+              value: "{{ .Values.registrationEndpoint }}"
+            - name: REGISTRATION_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: token
                   key: token
-            - name: INGRESS_HTTP_LISTEN
-              value: "{{ .Values.service.ingress.http.addr }}:{{ .Values.service.ingress.http.port }}"
-            - name: INGRESS_HTTPS_LISTEN
-              value: "{{ .Values.service.ingress.https.addr }}:{{ .Values.service.ingress.https.port }}"
-            - name: EGRESS_HTTP_LISTEN
-              value: "{{ .Values.service.egress.http.addr }}:{{ .Values.service.egress.http.port }}"
-            - name: EGRESS_HTTPS_LISTEN
-              value: "{{ .Values.service.egress.https.addr }}:{{ .Values.service.egress.https.port }}"
             - name: STATUS_LISTEN
               value: "{{ .Values.status.addr }}:{{ .Values.status.port }}"
-            - name: COLLECTOR_LISTEN
-              value: "{{ .Values.collector.addr }}:{{ .Values.collector.port }}"
+            - name: DEFAULT_TCP_LISTEN_ADDRESS
+              value: "{{ .Values.defaultTCPListenAddress }}"
+            - name: MIDDLEWARE_TCP_FORWARD_PORTS
+              value: "{{ .Values.middlewareTCPForwardPorts }}"
+            - name: TRANSPARENT_TCP_FORWARD_PORTS
+              value: "{{ .Values.transparentTCPForwardPorts }}"
           ports:
-            - name: i-http-service
-              containerPort: {{ .Values.service.ingress.http.port }}
-              protocol: TCP
-            - name: i-https-service
-              containerPort: {{ .Values.service.ingress.https.port }}
-              protocol: TCP
-            - name: e-http-service
-              containerPort: {{ .Values.service.egress.http.port }}
-              protocol: TCP
-            - name: e-https-service
-              containerPort: {{ .Values.service.egress.https.port }}
-              protocol: TCP
-            - name: status
-              containerPort: {{ .Values.status.port }}
-              protocol: TCP
+        {{- range .Values.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+        {{- end }}
           startupProbe:
             httpGet:
               path: /readyz
