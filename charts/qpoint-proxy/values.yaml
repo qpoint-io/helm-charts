@@ -118,3 +118,16 @@ affinity: {}
 
 # API token
 registrationToken: ""
+
+config: ""
+# config: |
+#   stacks: {}
+#   tap:
+#     default_stack: "example"
+#     default_domain_action: IGNORE # default capture action
+#     endpoints: []
+#   # Proxy configurations
+#   proxy:
+#     jwt_hmac_key: "qwertyuiopasdfghjklzxcvbnm123456"
+#     default_domain_action: ALLOW
+#     endpoints: []

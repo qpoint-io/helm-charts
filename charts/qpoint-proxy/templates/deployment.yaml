@@ -41,11 +41,17 @@ spec:
           env:
             - name: REGISTRATION_ENDPOINT
               value: "{{ .Values.registrationEndpoint }}"
+            {{- if .Values.registrationToken }}
             - name: REGISTRATION_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: token
                   key: token
+            {{- end }}
+            {{- if .Values.config }}
+            - name: QPOINT_CONFIG
+              value: "/app/proxy-config.yaml"
+            {{- end }}
             - name: STATUS_LISTEN
               value: "{{ .Values.status.addr }}:{{ .Values.status.port }}"
             - name: DEFAULT_TCP_LISTEN_ADDRESS
@@ -92,14 +98,23 @@ spec:
             failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
           volumeMounts:
+            - name: config-volume
+              mountPath: /app/proxy-config.yaml
+              subPath: proxy-config.yaml
+            {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            {{- end }}
       volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "qpoint.fullname" . }}-config
+            items:
+              - key: proxy-config.yaml
+                path: proxy-config.yaml
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
