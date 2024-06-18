@@ -50,7 +50,7 @@ middlewareTCPForwardPorts: "18080:80,18443:443"
 transparentTCPForwardPorts: "10080:80,10443:443"
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 10080
       containerPort: 10080
