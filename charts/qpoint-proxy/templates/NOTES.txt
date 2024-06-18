@@ -1,4 +1,4 @@
-1. Get the application URL by running these commands:
+- Confirm the service endpoints by running these commands:
 
 {{- if eq .Values.service.type "NodePort" }}
 
