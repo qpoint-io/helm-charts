@@ -8,7 +8,7 @@ The Qpoint Proxy can operate in two modes:
 
 ```sh
 kubectl --namespace qpoint create secret generic token --from-literal=token="<TOKEN>"
-helm install qpoint-gateway . --namespace qpoint --create-namespace --wait --timeout 20s
+helm install qpoint-proxy . --namespace qpoint --create-namespace --wait --timeout 20s
 ```
 
 2. Standalone mode. For this mode it depends on a config map named `config` with the file contents of a valid YAML configuration file format.

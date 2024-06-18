@@ -1,16 +1,63 @@
 1. Get the application URL by running these commands:
-{{- if contains "NodePort" .Values.service.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "qpoint.fullname" . }})
-  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT
-{{- else if contains "LoadBalancer" .Values.service.type }}
-     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "qpoint.fullname" . }}'
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "qpoint.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
-  echo http://$SERVICE_IP:{{ .Values.service.port }}
-{{- else if contains "ClusterIP" .Values.service.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "qpoint.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+
+{{- if eq .Values.service.type "NodePort" }}
+
+  echo "Waiting for the NodePort service to be available..."
+  wait_for_nodeport() {
+    local ready=true
+    {{- range .Values.service.ports }}
+    local node_port=$(kubectl get --namespace {{ $.Release.Namespace }} -o jsonpath="{.spec.ports[?(@.name=='{{ .name }}')].nodePort}" services {{ include "qpoint.fullname" $ }})
+    if [ -z "$node_port" ]; then
+      echo "waiting for service to be available..."
+      ready=false
+    else
+      for node_ip in $(kubectl get nodes --namespace {{ $.Release.Namespace }} -o jsonpath="{.items[*].status.addresses[?(@.type=='InternalIP')].address}"); do
+        echo "$node_ip:$node_port for {{ .name }} ({{ .description }})"
+      done
+    fi
+    {{- end }}
+    if [ "$ready" = true ]; then
+      return 0
+    else
+      return 1
+    fi
+  }
+  until wait_for_nodeport; do sleep 1; done
+
+{{- else if eq .Values.service.type "LoadBalancer" }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+
+  echo "Waiting for the LoadBalancer IP to be available..."
+  wait_for_loadbalancer() {
+    local service_ip=$(kubectl get services --namespace {{ $.Release.Namespace }} {{ include "qpoint.fullname" $ }} -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+    if [ -z "$service_ip" ]; then
+      echo "waiting for service to be available..."
+      return 1
+    else
+      {{- range .Values.service.ports }}
+      echo "$service_ip:{{ .port }} for {{ .name }} ({{ .description }})"
+      {{- end }}
+      return 0
+    fi
+  }
+  until wait_for_loadbalancer; do sleep 1; done
+
+{{- else if eq .Values.service.type "ClusterIP" }}
+
+  echo "Waiting for the ClusterIP service to be available..."
+  wait_for_clusterip() {
+    local cluster_ip=$(kubectl get services --namespace {{ $.Release.Namespace }} {{ include "qpoint.fullname" $ }} -o jsonpath="{.spec.clusterIP}")
+    if [ -z "$cluster_ip" ]; then
+      echo "waiting for service to be available..."
+      return 1
+    else
+      {{- range .Values.service.ports }}
+      echo "$cluster_ip:{{ .port }} for {{ .name }} ({{ .description }})"
+      {{- end }}
+      echo "DNS: {{ include "qpoint.fullname" $ }}.{{ $.Release.Namespace }}.svc.cluster.local"
+      return 0
+    fi
+  }
+  until wait_for_clusterip; do sleep 1; done
+
 {{- end }}
