@@ -44,7 +44,7 @@ securityContext:
   # runAsUser: 1000
 
 defaultTCPListenAddress: "0.0.0.0"
-connectTCPForwardPorts: "16080:80,16443:443"
+connectTCPForwardPorts: "16443:443"
 connectUpstream: "localhost:10443"
 
 # Default to an empty username and password
@@ -54,14 +54,11 @@ connectPassword: "default"
 service:
   type: ClusterIP
   ports:
-    - port: 16080
-      containerPort: 16080
-      protocol: TCP
-      name: e-http
     - port: 16443
       containerPort: 16443
       protocol: TCP
       name: e-https
+      description: "Egress HTTPS, CONNECT proxy"
 
 status:
   addr: 0.0.0.0
