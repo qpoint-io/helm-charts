@@ -46,8 +46,8 @@ securityContext:
   # runAsUser: 1000
 
 defaultTCPListenAddress: "0.0.0.0"
-middlewareTCPForwardPorts: "18080:80,18443:443"
-transparentTCPForwardPorts: "10080:80,10443:443"
+middlewareTCPForwardPorts: "10080:80,10443:443"
+transparentTCPForwardPorts: "18080:80,18443:443"
 
 service:
   type: ClusterIP
@@ -55,23 +55,23 @@ service:
     - port: 10080
       containerPort: 10080
       protocol: TCP
-      name: e-http-tr
-      description: "Egress HTTP, transparent proxy"
+      name: e-http-mi
+      description: "Egress HTTP, middleware proxy"
     - port: 10443
       containerPort: 10443
       protocol: TCP
-      name: e-https-tr
-      description: "Egress HTTPS, transparent proxy"
+      name: e-https-mi
+      description: "Egress HTTPS, middleware proxy"
     - port: 18080
       containerPort: 18080
       protocol: TCP
-      name: e-http-mi
-      description: "Egress HTTP, middleware proxy"
+      name: e-http-tr
+      description: "Egress HTTP, transparent proxy"
     - port: 18443
       containerPort: 18443
       protocol: TCP
-      name: e-https-mi
-      description: "Egress HTTPS, middleware proxy"
+      name: e-https-tr
+      description: "Egress HTTPS, transparent proxy"
 
 status:
   addr: 0.0.0.0
