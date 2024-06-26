@@ -14,7 +14,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-args: ["connect", "--envoy-log-level=error", "--log-level=info", "--dns-lookup-family=V4_ONLY"]
+args: ["connect"]
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -50,6 +50,21 @@ connectUpstream: "localhost:10443"
 # Default to an empty username and password
 connectUsername: "default"
 connectPassword: "default"
+
+# To enable access logs change to true
+accessLog: false
+
+# One of debug, info, warn, error, dpanic, panic, fatal
+logLevel: "info"
+
+# One of console, json
+logEncoding: "json"
+
+# One of trace, debug, info, warn, error, critical, off
+envoyLogLevel: "error"
+
+# One of AUTO, V4_ONLY, V6_ONLY, V4_PREFERRED, ALL
+dnsLookupFamily: "V4_ONLY"
 
 service:
   type: ClusterIP
