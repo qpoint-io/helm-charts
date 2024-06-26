@@ -60,6 +60,16 @@ spec:
               value: "{{ .Values.middlewareTCPForwardPorts }}"
             - name: TRANSPARENT_TCP_FORWARD_PORTS
               value: "{{ .Values.transparentTCPForwardPorts }}"
+            - name: ACCESS_LOG
+              value: "{{ .Values.accessLog }}"
+            - name: LOG_LEVEL
+              value: "{{ .Values.logLevel }}"
+            - name: LOG_ENCODING
+              value: "{{ .Values.logEncoding }}"
+            - name: ENVOY_LOG_LEVEL
+              value: "{{ .Values.envoyLogLevel }}"
+            - name: DNS_LOOKUP_FAMILY
+              value: "{{ .Values.dnsLookupFamily }}"
           ports:
         {{- range .Values.service.ports }}
             - name: {{ .name }}
