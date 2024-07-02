@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "qpoint.fullname" . }}
+  labels:
+    {{- include "qpoint.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "qpoint.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qpoint.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      hostPID: true
+      hostNetwork: true
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qpoint.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{- toYaml .Values.args | nindent 12 }}
+          env:
+            - name: REGISTRATION_ENDPOINT
+              value: "{{ .Values.registrationEndpoint }}"
+            {{- if .Values.registrationToken }}
+            - name: REGISTRATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qpoint.fullname" . }}-token
+                  key: token
+            {{- end }}
+            {{- if .Values.config }}
+            - name: QPOINT_CONFIG
+              value: "/app/tap-config.yaml"
+            {{- end }}
+            - name: STATUS_LISTEN
+              value: "{{ .Values.status.addr }}:{{ .Values.status.port }}"
+            - name: LOG_LEVEL
+              value: "{{ .Values.logLevel }}"
+            - name: LOG_ENCODING
+              value: "{{ .Values.logEncoding }}"
+            - name: TINI_SUBREAPER
+              value: "1"
+          ports:
+            - name: status
+              containerPort: {{ .Values.status.port }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: status
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: status
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: status
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/tap-config.yaml
+              subPath: tap-config.yaml
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "qpoint.fullname" . }}-config
+            items:
+              - key: tap-config.yaml
+                path: tap-config.yaml
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
