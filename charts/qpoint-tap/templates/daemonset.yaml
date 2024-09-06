@@ -59,6 +59,12 @@ spec:
               value: "{{ .Values.logEncoding }}"
             - name: TINI_SUBREAPER
               value: "1"
+            {{- if .Values.extraEnv }}
+            {{- range .Values.extraEnv }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: status
               containerPort: {{ .Values.status.port }}
