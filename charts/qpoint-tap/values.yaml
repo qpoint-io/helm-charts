@@ -111,3 +111,8 @@ config: ""
 #     jwt_hmac_key: "qwertyuiopasdfghjklzxcvbnm123456"
 #     default_domain_action: ALLOW
 #     endpoints: []
+
+# Additional environment variables for the DaemonSet
+# extraEnv:
+#   - name: BPF_TRACE
+#     value: "mod:openssl,mod:protocol,exe.contains:curl"
