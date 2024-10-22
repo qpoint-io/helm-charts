@@ -40,7 +40,13 @@ spec:
           env:
             - name: REGISTRATION_ENDPOINT
               value: "{{ .Values.registrationEndpoint }}"
-            {{- if .Values.registrationToken }}
+            {{- if .Values.registrationTokenSecretRefName }}
+            - name: REGISTRATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.registrationTokenSecretRefName }}
+                  key: token
+            {{- else if .Values.registrationToken }}
             - name: REGISTRATION_TOKEN
               valueFrom:
                 secretKeyRef:
