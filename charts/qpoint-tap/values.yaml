@@ -96,6 +96,8 @@ affinity: {}
 
 # API token
 registrationToken: ""
+# OR
+# registrationTokenSecretRefName: ""
 
 config: ""
 # config: |
