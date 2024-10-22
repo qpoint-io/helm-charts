@@ -116,10 +116,10 @@ config: ""
 # extraEnv:
 #   - name: BPF_TRACE
 #     value: "mod:openssl,mod:protocol,exe.contains:curl"
-# - name: SOME_ENV_VAR
-#   valueFrom:
-#     secretKeyRef:
+#   - name: SOME_ENV_VAR
+#     valueFrom:
+#       secretKeyRef:
 #       name: some-secret
 #       key: some-key
-  # - name: TLS_PROBES
-  #   value: "openssl"
+#   - name: TLS_PROBES
+#     value: "openssl"
