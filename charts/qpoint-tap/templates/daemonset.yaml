@@ -68,7 +68,12 @@ spec:
             {{- if .Values.extraEnv }}
             {{- range .Values.extraEnv }}
             - name: {{ .name }}
+              {{- if .value }}
               value: {{ .value | quote }}
+              {{- else if .valueFrom }}
+              valueFrom:
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
             {{- end }}
             {{- end }}
           ports:
