@@ -1,6 +1,6 @@
 # helm-charts
 
-Qpoint Helm charts are available at https://helm.qpoint.io/.
+Qpoint Helm charts are available at <https://helm.qpoint.io/>.
 
 ```sh
 helm repo add qpoint https://helm.qpoint.io/
@@ -15,7 +15,7 @@ helm search repo qpoint
 
 ## Releasing a new version
 
-1. Create a PR that updates `Chart.yaml`'s version numbers.
+ 1. Create a PR that updates `Chart.yaml`'s version numbers.
 
 ```yaml
 # This is the chart version. This version number should be incremented each time you make changes
@@ -30,14 +30,4 @@ version: 0.0.18 # 🚨 Update this version number
 appVersion: "v0.5.14" # 🚨 Update this version number
 ```
 
-2. Merge the PR.
-
-3. Pull the latest `main` branch and release the chart.
-
-4. Create a new branch for the next version.
-
-5. Run the `./bin/update-index` script to update the index.yaml file.
-
-6. Submit a PR with the updated index.yaml file and merge it.
-
-7. Done! 🎉
+ 2. Merge the PR and the index.yaml file will be updated automatically and deployed to the helm repo.
