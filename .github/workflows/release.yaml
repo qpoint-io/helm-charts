@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3.5
+        uses: azure/setup-helm@v4
 
       - name: Identify Changed Charts
         id: changed_charts
@@ -36,7 +36,30 @@ jobs:
               CHART_VERSION=$(grep 'version:' $CHART_PATH/Chart.yaml | cut -d ' ' -f 2)
               RELEASE_NAME="$chart-$CHART_VERSION"
               gh release create $RELEASE_NAME *.tgz --title "$RELEASE_NAME" --notes "New release of $chart"
+
+              # Update the Helm repository index
+              helm repo index . --url https://github.com/qpoint-io/helm-charts/releases/download/$RELEASE_NAME --merge index.yaml
+
+              # Add to commit message
+              echo "$RELEASE_NAME" >> changed_versions.txt
             fi
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit Updated Index
+        if: env.CHANGED_CHARTS != ''
+        run: |
+          # Create commit message from changed versions
+          echo "Update Helm repository index with:" > commit_msg.txt
+          echo "" >> commit_msg.txt
+          cat changed_versions.txt >> commit_msg.txt
+
+          # Configure Git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Commit and push changes
+          git add index.yaml
+          git commit -F commit_msg.txt
+          git push
