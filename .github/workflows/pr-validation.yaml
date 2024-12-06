@@ -22,6 +22,7 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}
           CHANGED_CHARTS=$(git diff --name-only origin/${{ github.base_ref }} --diff-filter=ACDMRT | grep '^charts/' | awk -F/ '{print $2}' | uniq | tr '\n' ' ')
+          echo "Changed charts detected: $CHANGED_CHARTS"
           echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
 
       - name: Lint Changed Charts
