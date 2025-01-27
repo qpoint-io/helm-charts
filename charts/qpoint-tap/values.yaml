@@ -113,6 +113,7 @@ config: ""
 #     endpoints: []
 
 # Additional environment variables for the DaemonSet
+extraEnv: []
 # extraEnv:
 #   - name: BPF_TRACE
 #     value: "mod:openssl,mod:protocol,exe.contains:curl"
