@@ -78,6 +78,10 @@ volumes:
       # Ensure the file directory is created.
       path: /sys
       type: Directory
+  - name: containerdsock
+    hostPath:
+      path: /run/containerd/containerd.sock
+      type: Socket
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
@@ -87,6 +91,8 @@ volumeMounts:
   - name: sys
     mountPath: "/sys"
     readOnly: true
+  - name: containerdsock
+    mountPath: /run/containerd/containerd.sock
 
 nodeSelector: {}
 
