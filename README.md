@@ -55,6 +55,8 @@ The following table lists the configurable parameters of the Qpoint TAP chart an
 | `resources.requests.memory` | Memory resource request | `128Mi` | Valid Kubernetes memory resource |
 | `volumes` | Additional volumes | See values.yaml | List of volume definitions |
 | `volumeMounts` | Additional volume mounts | See values.yaml | List of volume mount definitions |
+| `integrations.containerd.enabled` | Enable containerd integration | `true` | `true`, `false` |
+| `integrations.containerd.hostSocketPath` | Path to containerd socket on host | `/run/containerd/containerd.sock` | Valid file path |
 | `nodeSelector` | Node labels for pod assignment | `{}` | Valid node selector |
 | `tolerations` | Tolerations for pod assignment | `[]` | List of tolerations |
 | `affinity` | Affinity rules for pod assignment | `{}` | Valid affinity rules |
