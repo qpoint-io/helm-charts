@@ -94,6 +94,11 @@ tolerations: []
 
 affinity: {}
 
+integrations:
+  containerd:
+    enabled: true
+    hostSocketPath: /run/containerd/containerd.sock
+
 # API token
 registrationToken: ""
 # OR
