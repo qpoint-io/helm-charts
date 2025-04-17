@@ -1,9 +1,9 @@
-# Default values for qtap.
+# Default values for qpoint.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 image:
-  repository: us-docker.pkg.dev/qpoint-edge/public/qtap
+  repository: us-docker.pkg.dev/qpoint-edge/public/qpoint
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -12,7 +12,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-args: []
+args: ["tap"]
 
 registrationEndpoint: "https://api.qpoint.io"
 
