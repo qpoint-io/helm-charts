@@ -1,3 +1,5 @@
+.DS_Store
+
 ### Helm ###
 # Chart dependencies
 .cr-release-packages/
