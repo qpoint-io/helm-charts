@@ -19,13 +19,13 @@ The following table lists the configurable parameters of the Qpoint TAP chart an
 
 | Parameter | Description | Default | Allowed Values |
 |-----------|-------------|---------|----------------|
-| `image.repository` | Container image repository | `us-docker.pkg.dev/qpoint-edge/public/qpoint` | Valid container registry path |
+| `image.repository` | Container image repository | `us-docker.pkg.dev/qpoint-edge/public/qtap` | Valid container registry path |
 | `image.pullPolicy` | Container image pull policy | `IfNotPresent` | `IfNotPresent`, `Always`, `Never` |
 | `image.tag` | Container image tag | `""` (defaults to chart appVersion) | Valid image tag |
 | `imagePullSecrets` | Image pull secrets | `[]` | List of secret names |
 | `nameOverride` | Override the name of the chart | `""` | String |
 | `fullnameOverride` | Override the full name of the chart | `""` | String |
-| `args` | Container arguments | `["tap"]` | List of strings |
+| `args` | Container arguments | `[]` | List of strings |
 | `registrationEndpoint` | Qpoint API registration endpoint | `https://api.qpoint.io` | Valid URL |
 | `registrationToken` | API token for registration | `""` | Valid token string |
 | `registrationTokenSecretRefName` | Name of secret containing registration token. Overrides `registrationToken` | `""` | Valid Kubernetes secret name |
