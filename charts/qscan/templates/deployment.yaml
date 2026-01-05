@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qpoint.fullname" . }}
+  labels:
+    {{- include "qpoint.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qpoint.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "qpoint.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qpoint.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["uv", "run", "python", "pii_orchestrator.py"]
+          env:
+            - name: PULSE_ENDPOINT
+              value: {{ .Values.pulse.endpoint | quote }}
+            {{- if .Values.pulse.apiKeySecretRefName }}
+            - name: PULSE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.pulse.apiKeySecretRefName }}
+                  key: pulse-api-key
+            {{- else if .Values.pulse.apiKey }}
+            - name: PULSE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qpoint.fullname" . }}-credentials
+                  key: pulse-api-key
+            {{- end }}
+            {{- if .Values.aws.credentials.secretRefName }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.aws.credentials.secretRefName }}
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.aws.credentials.secretRefName }}
+                  key: AWS_SECRET_ACCESS_KEY
+            {{- else if or .Values.aws.credentials.accessKeyId .Values.aws.credentials.secretAccessKey }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qpoint.fullname" . }}-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qpoint.fullname" . }}-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+            {{- end }}
+            - name: S3_BUCKET_NAME
+              value: {{ .Values.aws.s3.bucketName | quote }}
+            - name: S3_REGION_NAME
+              value: {{ .Values.aws.s3.regionName | quote }}
+            - name: S3_ENDPOINT_URL
+              value: {{ .Values.aws.s3.endpointUrl | quote }}
+            - name: NUM_POLLERS
+              value: {{ .Values.qscan.numPollers | quote }}
+            - name: NUM_SCANNERS
+              value: {{ .Values.qscan.numScanners | quote }}
+            - name: METRICS_PORT
+              value: {{ .Values.metrics.port | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.qscan.logLevel | quote }}
+            - name: LOG_ENCODING
+              value: {{ .Values.qscan.logEncoding | quote }}
+            - name: QPOINT_STRATEGY
+              value: {{ .Values.qscan.qpointStrategy | quote }}
+            - name: MEMORY_LIMIT_FRACTION
+              value: {{ .Values.qscan.memoryLimitFraction | quote }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+              protocol: TCP
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: metrics
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- if .Values.gpu.enabled }}
+            {{- $resources := deepCopy .Values.resources }}
+            {{- if not $resources.limits }}
+            {{- $_ := set $resources "limits" dict }}
+            {{- end }}
+            {{- $_ := set $resources.limits "nvidia.com/gpu" (int .Values.gpu.count) }}
+            {{- toYaml $resources | nindent 12 }}
+            {{- else }}
+            {{- toYaml .Values.resources | nindent 12 }}
+            {{- end }}
+          {{- if .Values.config }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/services/worker/config.yaml
+              subPath: config.yaml
+              readOnly: true
+          {{- end }}
+      {{- if .Values.config }}
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "qpoint.fullname" . }}-config
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
