@@ -218,7 +218,6 @@ kubectl logs -l app.kubernetes.io/name=qscan
 
 ### Health check endpoints
 
-- Metrics: `http://<pod-ip>:9090/metrics`
 - Health: `http://<pod-ip>:9090/`
 
 ### Debugging

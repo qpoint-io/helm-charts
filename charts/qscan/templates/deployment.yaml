@@ -137,10 +137,15 @@ spec:
             failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
             {{- if .Values.gpu.enabled }}
-            limits:
-              nvidia.com/gpu: {{ .Values.gpu.count }}
+            {{- $resources := deepCopy .Values.resources }}
+            {{- if not $resources.limits }}
+            {{- $_ := set $resources "limits" dict }}
+            {{- end }}
+            {{- $_ := set $resources.limits "nvidia.com/gpu" (int .Values.gpu.count) }}
+            {{- toYaml $resources | nindent 12 }}
+            {{- else }}
+            {{- toYaml .Values.resources | nindent 12 }}
             {{- end }}
           {{- if .Values.config }}
           volumeMounts:
