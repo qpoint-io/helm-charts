@@ -51,25 +51,25 @@ helm install qscan qpoint/qscan \
 
 ### Key Configuration Parameters
 
-| Parameter                       | Description                              | Default                                       |
-| ------------------------------- | ---------------------------------------- | --------------------------------------------- |
-| `image.repository`              | QScan worker image repository            | `us-docker.pkg.dev/qpoint-edge/private/qscan` |
-| `image.tag`                     | Image tag (defaults to chart appVersion) | `""`                                          |
-| `replicaCount`                  | Number of worker replicas                | `1`                                           |
-| `pulse.endpoint`                | Pulse API endpoint URL                   | `https://pulse.qpoint.io`                     |
-| `pulse.apiKeySecretRefName`     | External secret name for Pulse API key   | `""`                                          |
-| `pulse.apiKey`                  | Inline Pulse API key (testing only)      | `""`                                          |
-| `aws.s3.bucketName`             | S3 bucket name for artifacts             | `assets`                                      |
-| `aws.s3.regionName`             | AWS region                               | `us-east-1`                                   |
-| `aws.s3.endpointUrl`            | S3 endpoint URL                          | `https://s3.warehouse.qpoint.io`              |
-| `aws.credentials.secretRefName` | External secret name for AWS credentials | `""`                                          |
-| `qscan.numPollers`              | Number of async job pollers              | `2`                                           |
-| `qscan.numScanners`             | Number of ML scanner workers             | `2`                                           |
-| `qscan.logLevel`                | Logging level                            | `info`                                        |
-| `resources.limits.cpu`          | CPU limit                                | `4000m`                                       |
-| `resources.limits.memory`       | Memory limit                             | `16Gi`                                        |
-| `gpu.enabled`                   | Enable GPU support                       | `false`                                       |
-| `autoscaling.enabled`           | Enable horizontal pod autoscaling        | `false`                                       |
+| Parameter                       | Description                              | Default                                      |
+| ------------------------------- | ---------------------------------------- | -------------------------------------------- |
+| `image.repository`              | QScan worker image repository            | `us-docker.pkg.dev/qpoint-edge/public/qscan` |
+| `image.tag`                     | Image tag (defaults to chart appVersion) | `""`                                         |
+| `replicaCount`                  | Number of worker replicas                | `1`                                          |
+| `pulse.endpoint`                | Pulse API endpoint URL                   | `https://pulse.qpoint.io`                    |
+| `pulse.apiKeySecretRefName`     | External secret name for Pulse API key   | `""`                                         |
+| `pulse.apiKey`                  | Inline Pulse API key (testing only)      | `""`                                         |
+| `aws.s3.bucketName`             | S3 bucket name for artifacts             | `assets`                                     |
+| `aws.s3.regionName`             | AWS region                               | `us-east-1`                                  |
+| `aws.s3.endpointUrl`            | S3 endpoint URL                          | `https://s3.warehouse.qpoint.io`             |
+| `aws.credentials.secretRefName` | External secret name for AWS credentials | `""`                                         |
+| `qscan.numPollers`              | Number of async job pollers              | `2`                                          |
+| `qscan.numScanners`             | Number of ML scanner workers             | `2`                                          |
+| `qscan.logLevel`                | Logging level                            | `info`                                       |
+| `resources.limits.cpu`          | CPU limit                                | `4000m`                                      |
+| `resources.limits.memory`       | Memory limit                             | `16Gi`                                       |
+| `gpu.enabled`                   | Enable GPU support                       | `false`                                      |
+| `autoscaling.enabled`           | Enable horizontal pod autoscaling        | `false`                                      |
 
 ### Examples
 
