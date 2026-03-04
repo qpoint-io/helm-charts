@@ -1,9 +1,10 @@
 name: PR Validation
 
+permissions:
+  contents: read
+
 on:
   pull_request:
-    paths:
-      - 'charts/**'
 
 jobs:
   lint-charts:
@@ -45,7 +46,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install crane
-        uses: imjasonh/setup-crane@v0.4
+        uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
 
       - name: Identify Changed Charts
         run: |
