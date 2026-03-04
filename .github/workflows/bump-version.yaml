@@ -1,0 +1,78 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The new appVersion (e.g. v0.18.0)"
+        required: true
+        type: string
+      product:
+        description: "Product to bump"
+        required: true
+        type: choice
+        options:
+          - qtap
+          - qscan
+      auto_merge:
+        description: "Auto-merge the PR immediately"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read current chart version
+        id: chart
+        run: |
+          CURRENT_VERSION=$(grep '^version:' charts/${{ inputs.product }}/Chart.yaml | awk '{print $2}')
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Increment chart patch version
+        id: bump
+        run: |
+          CURRENT="${{ steps.chart.outputs.current_version }}"
+          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT" | cut -d. -f3)
+          NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Chart.yaml
+        run: |
+          sed -i "s/^version:.*/version: ${{ steps.bump.outputs.new_version }}/" charts/${{ inputs.product }}/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.version }}\"/" charts/${{ inputs.product }}/Chart.yaml
+
+      - name: Create branch, commit, and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          BRANCH="bump-${{ inputs.product }}-${{ inputs.version }}"
+          git checkout -b "$BRANCH"
+          git add charts/${{ inputs.product }}/Chart.yaml
+          git commit -m "bump ${{ inputs.product }} to ${{ inputs.version }}"
+          git push origin "$BRANCH"
+
+      - name: Create PR
+        id: pr
+        run: |
+          gh pr create \
+            --title "bump ${{ inputs.product }} to ${{ inputs.version }}" \
+            --body "Bump ${{ inputs.product }} appVersion to \`${{ inputs.version }}\` and chart version to \`${{ steps.bump.outputs.new_version }}\`."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge
+        if: inputs.auto_merge
+        run: gh pr merge --auto --squash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

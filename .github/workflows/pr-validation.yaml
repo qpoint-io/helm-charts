@@ -1,9 +1,10 @@
 name: PR Validation
 
+permissions:
+  contents: read
+
 on:
   pull_request:
-    paths:
-      - 'charts/**'
 
 jobs:
   lint-charts:
@@ -33,5 +34,38 @@ jobs:
             if [ -d "$CHART_PATH" ]; then
               echo "Linting $chart..."
               helm lint $CHART_PATH
+            fi
+          done
+
+  check-image-exists:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install crane
+        uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+      - name: Identify Changed Charts
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGED_CHARTS=$(git diff --name-only origin/${{ github.base_ref }} --diff-filter=ACDMRT | grep '^charts/' | awk -F/ '{print $2}' | uniq | tr '\n' ' ')
+          echo "Changed charts detected: $CHANGED_CHARTS"
+          echo "CHANGED_CHARTS=$CHANGED_CHARTS" >> $GITHUB_ENV
+
+      - name: Check Docker image exists
+        if: env.CHANGED_CHARTS != ''
+        run: |
+          for chart in $CHANGED_CHARTS; do
+            CHART_PATH="charts/$chart"
+            if [ -d "$CHART_PATH" ]; then
+              REPO=$(grep 'repository:' "$CHART_PATH/values.yaml" | awk '{print $2}')
+              TAG=$(grep '^appVersion:' "$CHART_PATH/Chart.yaml" | awk '{print $2}' | tr -d '"')
+              IMAGE="${REPO}:${TAG}"
+              echo "Checking image: $IMAGE"
+              crane manifest "$IMAGE" > /dev/null
+              echo "Image $IMAGE exists"
             fi
           done
