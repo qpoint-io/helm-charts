@@ -24,6 +24,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GHA_WORKFLOW_JON_PAT }}
+
 jobs:
   bump-version:
     runs-on: ubuntu-latest
@@ -60,7 +63,7 @@ jobs:
           git checkout -b "$BRANCH"
           git add charts/${{ inputs.product }}/Chart.yaml
           git commit -m "bump ${{ inputs.product }} to ${{ inputs.version }}"
-          git push origin "$BRANCH"
+          git push https://x-access-token:${{ secrets.GHA_WORKFLOW_JON_PAT }}@github.com/${{ github.repository }}.git "$BRANCH"
 
       - name: Create PR
         id: pr
@@ -68,11 +71,7 @@ jobs:
           gh pr create \
             --title "bump ${{ inputs.product }} to ${{ inputs.version }}" \
             --body "Bump ${{ inputs.product }} appVersion to \`${{ inputs.version }}\` and chart version to \`${{ steps.bump.outputs.new_version }}\`."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-merge
         if: inputs.auto_merge
         run: gh pr merge --auto --squash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
