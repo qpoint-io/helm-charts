@@ -33,6 +33,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GHA_WORKFLOW_JON_PAT }}
 
       - name: Read current chart version
         id: chart
@@ -63,7 +65,7 @@ jobs:
           git checkout -b "$BRANCH"
           git add charts/${{ inputs.product }}/Chart.yaml
           git commit -m "bump ${{ inputs.product }} to ${{ inputs.version }}"
-          git push https://x-access-token:${{ secrets.GHA_WORKFLOW_JON_PAT }}@github.com/${{ github.repository }}.git "$BRANCH"
+          git push origin "$BRANCH"
 
       - name: Create PR
         id: pr
